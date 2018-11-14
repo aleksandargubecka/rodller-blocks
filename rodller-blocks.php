@@ -1,48 +1,177 @@
 <?php
-
 /**
- * Plugin Name:       Rodller Blocks
- * Plugin URI:        https://rodller.com/plugins/rodller-blocks
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
- * Author:            Rodller
- * Author URI:        https://rodller.com
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       rodller-blocks
- * Domain Path:       /languages
+ * Plugin Name: Rodller Blocks
+ * Plugin URI: https://rodller.com
+ * Description: Some Desc
+ * Text Domain: rodller-blocks
+ * Domain Path: /languages
+ * Author: Rodller
+ * Author URI: https://rodller.com
+ * Version: 1.0.0
+ * License: GPL2+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ *
+ * @package rodller
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+//  Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+// Only load if Gutenberg is available.
+// TODO add comments
+if ( ! function_exists( 'register_block_type' ) ) {
+	// TODO message user to install gutenberg if version of wordpress is less then 5
+	return;
 }
 
+if ( ! function_exists( 'rodller_blocks_set_locale' ) ):
+	function rodller_blocks_set_locale() {
+		load_plugin_textdomain( 'rodller-blocks', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	}
+endif;
+add_action( 'plugins_loaded', 'rodller_blocks_set_locale' );
+
+if ( ! function_exists( 'rodller_blocks_get_registered_sidebars' ) ) :
+	function rodller_blocks_get_registered_sidebars() {
+		
+		$sidebars[] = array(
+			'value' => 'none',
+			'label' => esc_html__( 'None', 'rodller-blocks' )
+		);
+		
+		global $wp_registered_sidebars;
+		
+		if ( ! empty( $wp_registered_sidebars ) ) {
+			
+			foreach ( $wp_registered_sidebars as $sidebar ) {
+				$sidebars[] = array(
+					'value' => $sidebar['id'],
+					'label' => $sidebar['name']
+				);
+			}
+			
+		}
+		
+		return $sidebars;
+	}
+endif;
 /**
- * Currently plugin version.
+ * Enqueue block editor only JavaScript and CSS
  */
-define( 'RODLLER_BLOCKS_VERSION', '1.0.0' );
-define( 'RODLLER_BLOCKS_URL', trailingslashit(plugin_dir_url(__FILE__)) );
+if ( ! function_exists( 'rodller_blocks_editor_scripts' ) ):
+	function rodller_blocks_editor_scripts() {
+		// Make paths variables so we don't write em twice ;)
+		$blockPath       = '/assets/js/editor.blocks.js';
+		$editorStylePath = '/assets/css/blocks.editor.css';
+		
+		// Enqueue the bundled block JS file
+		wp_register_script( 'rodller-blocks-js', plugins_url( $blockPath, __FILE__ ), [
+				'wp-i18n',
+				'wp-element',
+				'wp-blocks',
+				'wp-components',
+				'wp-api',
+			], filemtime( plugin_dir_path( __FILE__ ) . $blockPath ) );
+		
+		wp_localize_script( 'rodller-blocks-js', 'rodller_blocks', rodller_blocks_get_js_settings() );
+		
+		wp_enqueue_script( 'rodller-blocks-js' );
+		
+		// Enqueue optional editor only styles
+		wp_enqueue_style( 'rodller-blocks-editor-css', plugins_url( $editorStylePath, __FILE__ ), [ 'wp-blocks' ], filemtime( plugin_dir_path( __FILE__ ) . $editorStylePath ) );
+	}
+endif;
+add_action( 'enqueue_block_editor_assets', 'rodller_blocks_editor_scripts' );
+
+
+if(!function_exists('rodller_blocks_get_js_settings')):
+    function rodller_blocks_get_js_settings(){
+	    $settings = apply_filters( 'modify_rodller_blocks_js_settings', array(
+		    'layouts' => array(
+			    array(
+				    'label' => 'a',
+				    'value' => 'Layout A',
+			    ),
+			    array(
+				    'label' => 'b',
+				    'value' => 'Layout B',
+			    ),
+		    ),
+	    ) );
+	    
+	    return $settings;
+    }
+endif;
 
 /**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
+ * Enqueue front end and editor JavaScript and CSS
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-rodller-blocks.php';
+if ( ! function_exists( 'rodller_blocks_frontend_scripts' ) ):
+	function rodller_blocks_frontend_scripts() {
+		$blockPath = '/assets/js/frontend.blocks.js';
+		// Make paths variables so we don't write em twice ;)
+		$stylePath = '/assets/css/blocks.style.css';
+		
+		// Enqueue the bundled block JS file
+		wp_enqueue_script( 'rodller-blocks-frontend-js', plugins_url( $blockPath, __FILE__ ), [
+				'wp-i18n',
+				'wp-element',
+				'wp-blocks',
+				'wp-components',
+				'wp-api',
+			], filemtime( plugin_dir_path( __FILE__ ) . $blockPath ) );
+		
+		// Enqueue frontend and editor block styles
+		wp_enqueue_style( 'rodller-blocks-css', plugins_url( $stylePath, __FILE__ ), [ 'wp-blocks' ], filemtime( plugin_dir_path( __FILE__ ) . $stylePath ) );
+		
+	}
+endif;
+add_action( 'enqueue_block_assets', 'rodller_blocks_frontend_scripts' );
+
+register_block_type( 'rodller/rodller-posts', array(
+	'attributes'      => array(
+		'layout'       => array(
+			'type'    => 'string',
+			'default' => 'a',
+		),
+		'postsPerPage' => array(
+			'type'    => 'number',
+			'default' => 4,
+		),
+		//		'categories'   => array(
+		//			'type' => 'string',
+		//		),
+	),
+	'render_callback' => 'rodller_posts_block_render',
+) );
 
 /**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
+ * Server rendering for /blocks/rodller-posts
  */
-function run_rodller_blocks() {
-
-	$plugin = new Rodller_Blocks();
-	$plugin->run();
-
-}
-run_rodller_blocks();
+if ( ! function_exists( 'rodller_posts_block_render' ) ):
+	function rodller_posts_block_render( $attributes ) {
+		$recent_posts = wp_get_recent_posts( [
+			'numberposts' => intval($attributes['postsPerPage']),
+			'exclude' => get_queried_object_id(),
+			'post_status' => 'publish',
+		] );
+		
+		if ( empty( $recent_posts ) ) {
+			return '<p>No posts</p>';
+		}
+		
+		$markup = '<ul>';
+		
+		foreach ( $recent_posts as $post ) {
+			
+			$post_id = $post['ID'];
+			$markup  .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_permalink( $post_id ) ), esc_html( get_the_title( $post_id ) ) );
+		}
+		
+		$markup .= "</ul>";
+		
+		$markup = apply_filters('modify_rodller_posts_block_render', $markup, $attributes);
+		
+		return $markup;
+	}
+endif;
