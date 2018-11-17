@@ -9,14 +9,8 @@ const {
 const { Component } = wp.element;
 
 const {
-    Fragment,
-    Toolbar,
-    Button,
-    Tooltip,
-    RangeControl,
     PanelBody,
-    PanelRow,
-    FormToggle,
+    ToggleControl,
     SelectControl,
     Spinner,
     QueryControls
@@ -32,9 +26,16 @@ class RodllerPostsBlock extends Component{
 
     render() {
 
-        const {attributes: { layout, postsPerPage }, className, setAttributes} = this.props;
+        const {attributes: { layout, postsToShow, categories, order, orderBy, author, displayLoadMore }, className, setAttributes} = this.props;
 
-        const {posts, categoriesList} = this.props;
+        const {posts, categoriesList, authors} = this.props;
+
+        const authorsList = ( authors.map( author => {
+            return {
+                label: author.name,
+                value: author.id
+            };
+        } ) );
 
         const RenderPosts = (posts) => {
             if ( ! posts ) {
@@ -76,12 +77,29 @@ class RodllerPostsBlock extends Component{
                             onChange={ ( value ) => this.props.setAttributes( { layout: value } ) }
                         />
                     }
-                    <RangeControl
-                        label={ __( 'Number of posts', 'rodller-blocks'  ) }
-                        value={ postsPerPage }
-                        onChange={ ( value ) => setAttributes( { postsPerPage: value } ) }
-                        min={ 1 }
-                        max={ 30 }
+                    <QueryControls
+                        { ...{ order, orderBy } }
+                        numberOfItems={ postsToShow }
+                        categoriesList={ categoriesList }
+                        selectedCategoryId={ categories }
+                        onOrderChange={ ( value ) => setAttributes( { order: value } ) }
+                        onOrderByChange={ ( value ) => setAttributes( { orderBy: value } ) }
+                        onCategoryChange={ ( value ) => setAttributes( { categories: '' !== value ? value : undefined } ) }
+                        onNumberOfItemsChange={ ( value ) => setAttributes( { postsToShow: value } ) }
+                    />
+                    { authorsList.length > 1 &&
+                        <SelectControl
+                            label={ __( 'Author', 'rodller-blocks' ) }
+                            options={ authorsList }
+                            value={ author }
+                            onChange={ ( value ) => this.props.setAttributes( { author: value } ) }
+                        />
+                    }
+                    <ToggleControl
+                        label="Display Load More button"
+                        help={ displayLoadMore ? '' : 'No fixed background.' }
+                        checked={ displayLoadMore }
+                        onChange={ ( value ) => this.props.setAttributes( { displayLoadMore: value } ) }
                     />
                 </PanelBody>
             </InspectorControls>,
@@ -94,16 +112,20 @@ class RodllerPostsBlock extends Component{
 
 export default withSelect( (select, props) => {
 
-    const { postsPerPage, categories } = props.attributes;
-    const { getEntityRecords } = select( 'core' );
+    const { postsToShow, categories, order, orderBy, author } = props.attributes;
+    const { getEntityRecords, getAuthors } = select( 'core' );
 
     return {
         posts: getEntityRecords( 'postType', 'post', {
-            per_page: parseInt(postsPerPage),
+            per_page: parseInt(postsToShow),
+            categories: categories,
+            order: order,
+            orderby: orderBy,
             exclude: parseInt(findGetParameter('post')),
-            category: typeof categories !== "undefined" ? parseInt(categories) : 6
+            author: author
         } ),
         categoriesList: getEntityRecords( 'taxonomy', 'category', {per_page: 100} ),
+        authors: getAuthors()
     };
 
 } ) (RodllerPostsBlock);

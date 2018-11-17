@@ -92,10 +92,6 @@ if(!function_exists('rodller_blocks_get_js_settings')):
 				    'label' => 'a',
 				    'value' => 'Layout A',
 			    ),
-			    array(
-				    'label' => 'b',
-				    'value' => 'Layout B',
-			    ),
 		    ),
 	    ) );
 	    
@@ -134,13 +130,28 @@ register_block_type( 'rodller/rodller-posts', array(
 			'type'    => 'string',
 			'default' => 'a',
 		),
-		'postsPerPage' => array(
+		'postsToShow' => array(
 			'type'    => 'number',
 			'default' => 4,
 		),
-		//		'categories'   => array(
-		//			'type' => 'string',
-		//		),
+		'categories'   => array(
+			'type' => 'string',
+		),
+		'order' => array(
+			'type' => 'string',
+			'default' => 'desc',
+		),
+		'orderBy'  => array(
+			'type' => 'string',
+			'default' => 'date',
+		),
+		'author'  => array(
+			'type' => 'string',
+		),
+		'displayLoadMore'  => array(
+			'type' => 'boolean',
+			'default' => true
+		),
 	),
 	'render_callback' => 'rodller_posts_block_render',
 ) );
@@ -150,11 +161,22 @@ register_block_type( 'rodller/rodller-posts', array(
  */
 if ( ! function_exists( 'rodller_posts_block_render' ) ):
 	function rodller_posts_block_render( $attributes ) {
-		$recent_posts = wp_get_recent_posts( [
-			'numberposts' => intval($attributes['postsPerPage']),
+
+		$args = [
+			'numberposts' => intval($attributes['postsToShow']),
 			'exclude' => get_queried_object_id(),
 			'post_status' => 'publish',
-		] );
+		];
+		
+		if(!empty($attributes['category'])){
+		    $args['category'] = intval($attributes['categories']);
+		}
+		
+		if(!empty($attributes['author'])){
+		    $args['author'] = intval($attributes['author']);
+		}
+	
+		$recent_posts = get_posts( $args );
 		
 		if ( empty( $recent_posts ) ) {
 			return '<p>No posts</p>';
@@ -164,11 +186,17 @@ if ( ! function_exists( 'rodller_posts_block_render' ) ):
 		
 		foreach ( $recent_posts as $post ) {
 			
-			$post_id = $post['ID'];
+			$post_id = $post->ID;
 			$markup  .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_permalink( $post_id ) ), esc_html( get_the_title( $post_id ) ) );
 		}
 		
 		$markup .= "</ul>";
+		
+		if( $attributes['displayLoadMore'] ){
+			$load_more_button_classes = apply_filters('modify_rodller_posts_block_loadmore_button_classes', 'rodller-blocks-btn');
+		
+			$markup .= '<a href="javascript:void(0)" data-query="' . esc_attr( json_encode($args)) . '" data-paged="1" class="rodller-blocks-load-more-button ' . esc_attr($load_more_button_classes) . '">' . __('Load More', 'rodller-blocks') . '</a>';
+		}
 		
 		$markup = apply_filters('modify_rodller_posts_block_render', $markup, $attributes);
 		
