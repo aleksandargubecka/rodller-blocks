@@ -4,7 +4,7 @@ register_block_type( 'rodller/rodller-posts', [
 	'attributes'      => [
 		'layout'          => [
 			'type'    => 'string',
-			'default' => 'a',
+			'default' => 'a'
 		],
 		'postsToShow'     => [
 			'type'    => 'number',
@@ -31,6 +31,53 @@ register_block_type( 'rodller/rodller-posts', [
 	],
 	'render_callback' => 'rodller_posts_block_render',
 ] );
+
+
+/**
+ * Create API fields for additional info
+ */
+function rodller_blocks_register_rest_fields() {
+
+	register_rest_field(
+		'post',
+		'featured_image_sizes_url',
+		array(
+			'get_callback' => 'rodller_blocks_get_posts_featured_images',
+			'update_callback' => null,
+			'schema' => null,
+		)
+	);
+	
+}
+add_action( 'rest_api_init', 'rodller_blocks_register_rest_fields' );
+
+if(!function_exists('rodller_blocks_get_posts_featured_images')):
+    function rodller_blocks_get_posts_featured_images( $object ){
+		$fetch_image_sizes = apply_filters('rodller_blocks_modify_posts_featured_images', [
+			'thumbnail',
+			'medium',
+			'large',
+			'full'
+		]);
+		
+		$images = [];
+		
+	    foreach ( $fetch_image_sizes as $fetch_image_size ) {
+		    $image = wp_get_attachment_image_src(
+			    $object['featured_media'],
+			    $fetch_image_size,
+			    false
+		    );
+		    
+		    if( ! empty( $image[0] )){
+		        $images[$fetch_image_size] = $image[0];
+		    }
+		}
+	    
+	    return $images;
+    }
+endif;
+
 
 /**
  * Server rendering for /blocks/rodller-posts

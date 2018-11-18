@@ -1,12 +1,14 @@
 import classnames from "classnames";
 
-const { __ } = wp.i18n;
+const {__} = wp.i18n;
 
 const {
     InspectorControls,
 } = wp.editor;
 
-const { Component } = wp.element;
+const {Component} = wp.element;
+
+const {decodeEntities} = wp.htmlEntities;
 
 const {
     PanelBody,
@@ -16,137 +18,145 @@ const {
     QueryControls
 } = wp.components;
 
-const { withSelect } = wp.data;
+const {withSelect} = wp.data;
 
 
-class RodllerPostsBlock extends Component{
+class RodllerPostsBlock extends Component {
     constructor() {
-        super( ...arguments );
+        super(...arguments);
     }
 
     render() {
-        const {attributes: { layout, postsToShow, categories, order, orderBy, author, displayLoadMore }, className, setAttributes} = this.props;
+        const {attributes: {layout, postsToShow, categories, order, orderBy, author, displayLoadMore}, className, setAttributes} = this.props;
 
         const {posts, categoriesList, authors} = this.props;
 
-        const authorsList = ( authors.map( singleAuthor => {
+        let layoutOptions = [];
+
+        Object.keys(rodller_blocks.layouts).map((objectKey) => {
+            layoutOptions.push({
+                value: rodller_blocks.layouts[objectKey].value,
+                label: rodller_blocks.layouts[objectKey].label,
+            })
+        });
+
+        console.log();
+
+
+        const authorsList = (authors.map(singleAuthor => {
             return {
                 label: singleAuthor.name,
                 value: singleAuthor.id
             };
-        } ) );
+        }));
 
         const RenderPosts = (posts) => {
-            if ( ! posts ) {
+
+            if (!posts) {
                 return (
-                    <p className={className} >
-                        <Spinner />
-                        { __( 'Loading Posts', 'rodller-blocks' ) }
+                    <p className={className}>
+                        <Spinner/>
+                        {__('Loading Posts', 'rodller-blocks')}
                     </p>
                 );
             }
 
-            if ( 0 === posts.length ) {
-                return <p>{ __( 'No Posts', 'rodller-blocks' ) }</p>;
+            if (0 === posts.length) {
+                return <p>{__('No Posts', 'rodller-blocks')}</p>;
             }
 
             return [
+                <ul className={'rodller-blocks-posts'}>
+                    {posts.map(post => {
 
-                <ul className={ classnames({
-                    layout: 'layout-' + layout
-                }) }>
-                    { posts.map( post => {
                         return (
-                            <li>
-                                <a className={ className } href={ post.link }>
-                                    { post.title.rendered }
-                                </a>
+                            <li className={classnames({
+                                layout: 'layout-' + layout
+                            })}>
+                                {
+                                    rodller_blocks.layouts[layout].order.map((layoutOrder) => {
+                                        switch (layoutOrder) {
+                                            case 'image':
+                                                if( post.featured_image_sizes_url !== undefined && post.featured_image_sizes_url && post.featured_image_sizes_url.medium != null ){
+                                                    return <div className="rodller-blocks-post-image">
+                                                        <a href={post.link} target="_blank" rel="bookmark">
+                                                            <img src={post.featured_image_sizes_url.medium} alt={decodeEntities(post.title.rendered.trim()) || __('(Untitled)', 'rodller-blocks')}/>
+                                                        </a>
+                                                    </div>;
+                                                }
+                                                break;
+                                            case 'title':
+                                                return <a className={'rodller-posts-title'} href={post.link} target="_blank" rel="bookmark">
+                                                    <h2>{post.title.rendered}</h2>
+                                                </a>;
+                                            case 'meta':
+                                                if (post.meta.length > 0) {
+                                                    return <div className={'rodller-blocks-metadata'}>
+                                                        {post.meta.map(singleMeta => {
+                                                            return (
+                                                                {singleMeta}
+                                                            )
+                                                        })
+                                                        }
+                                                    </div>
+                                                }
+                                                break;
+                                            case 'excerpt':
+                                                return <div dangerouslySetInnerHTML={{__html: post.excerpt.rendered}} className={'rodller-posts-expert'}/>;
+                                        }
+                                    })
+                                }
                             </li>
                         );
-                    }) }
+                    })}
                 </ul>,
                 <div>
-                    { displayLoadMore &&
-                        <a className={'rodller-blocks-load-more-button'}>{__('Load More', 'rodller-blocks')}</a>
+                    {displayLoadMore &&
+                    <a className={'rodller-blocks-load-more-button'}>{__('Load More', 'rodller-blocks')}</a>
                     }
                 </div>
-            ]
-            ;
+            ];
         };
 
         return [
             <InspectorControls>
                 <PanelBody title={__('Roddler Posts Settings', 'rodller-blocks')}>
-                    { rodller_blocks.layouts.length > 1 &&
-                        <SelectControl
-                            label={ __( 'Layout', 'rodller-blocks' ) }
-                            options={ rodller_blocks.layouts }
-                            value={ layout }
-                            onChange={ ( value ) => this.props.setAttributes( { layout: value } ) }
-                        />
+                    {layoutOptions.length > 1 &&
+                    <SelectControl label={__('Layout', 'rodller-blocks')} options={layoutOptions} value={layout} onChange={(value) => this.props.setAttributes({layout: value})}/>
                     }
                     <QueryControls
-                        { ...{ order, orderBy } }
-                        numberOfItems={ postsToShow }
-                        categoriesList={ categoriesList }
-                        selectedCategoryId={ categories }
-                        onOrderChange={ ( value ) => setAttributes( { order: value } ) }
-                        onOrderByChange={ ( value ) => setAttributes( { orderBy: value } ) }
-                        onCategoryChange={ ( value ) => setAttributes( { categories: '' !== value ? value : undefined } ) }
-                        onNumberOfItemsChange={ ( value ) => setAttributes( { postsToShow: value } ) }
-                    />
-                    { authorsList.length > 1 &&
-                        <SelectControl
-                            label={ __( 'Author', 'rodller-blocks' ) }
-                            options={ authorsList }
-                            value={ author }
-                            onChange={ ( value ) => this.props.setAttributes( { author: value } ) }
-                        />
+                        {...{
+                            order,
+                            orderBy
+                        }} numberOfItems={postsToShow} categoriesList={categoriesList} selectedCategoryId={categories} onOrderChange={(value) => setAttributes({order: value})} onOrderByChange={(value) => setAttributes({orderBy: value})} onCategoryChange={(value) => setAttributes({categories: '' !== value ? value : undefined})} onNumberOfItemsChange={(value) => setAttributes({postsToShow: value})}/>
+                    {authorsList.length > 1 &&
+                    <SelectControl label={__('Author', 'rodller-blocks')} options={authorsList} value={author} onChange={(value) => this.props.setAttributes({author: value})}/>
                     }
-                    <ToggleControl
-                        label= { __( 'Display Load More button', 'rodller-blocks' ) }
-                        checked={ displayLoadMore }
-                        onChange={ ( value ) => this.props.setAttributes( { displayLoadMore: value } ) }
-                    />
+                    <ToggleControl label={__('Display Load More button', 'rodller-blocks')} checked={displayLoadMore} onChange={(value) => this.props.setAttributes({displayLoadMore: value})}/>
                 </PanelBody>
             </InspectorControls>,
             <div>
-                { RenderPosts(posts) }
+                {RenderPosts(posts)}
             </div>
         ];
     }
 }
 
-export default withSelect( (select, props) => {
+export default withSelect((select, props) => {
 
-    const { postsToShow, categories, order, orderBy, author } = props.attributes;
-    const { getEntityRecords, getAuthors } = select( 'core' );
+    const {postsToShow, categories, order, orderBy, author, layout} = props.attributes;
+    const {getEntityRecords, getAuthors} = select('core');
 
     return {
-        posts: getEntityRecords( 'postType', 'post', {
+        posts: getEntityRecords('postType', 'post', {
             per_page: parseInt(postsToShow),
             categories: categories,
             order: order,
             orderby: orderBy,
             author: author,
-        } ),
-        categoriesList: getEntityRecords( 'taxonomy', 'category', {per_page: 100} ),
+        }),
+        categoriesList: getEntityRecords('taxonomy', 'category', {per_page: 100}),
         authors: getAuthors()
     };
 
-} ) (RodllerPostsBlock);
-
-function findGetParameter(parameterName) {
-    let result = null,
-        tmp = [];
-
-    location.search
-        .substr(1)
-        .split("&")
-        .forEach(function (item) {
-            tmp = item.split("=");
-            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-        });
-
-    return result;
-}
+})(RodllerPostsBlock);

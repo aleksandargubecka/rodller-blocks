@@ -29,9 +29,15 @@ if ( ! function_exists( 'rodller_blocks_get_js_settings' ) ):
 	function rodller_blocks_get_editor_js_settings() {
 		$settings = apply_filters( 'rodller_blocks_modify_editor_js_settings', [
 			'layouts' => [
-				[
-					'label' => 'a',
-					'value' => 'Layout A',
+				'a' => [
+					'value' => 'a',
+					'label' => 'Layout A',
+					'order' => ['image', 'title', 'meta', 'excerpt']
+				],
+				'b' => [
+					'value' => 'b',
+					'label' => 'Layout B',
+					'order' => ['title', 'image', 'meta', 'excerpt']
 				],
 			],
 		] );
