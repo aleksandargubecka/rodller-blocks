@@ -25,15 +25,14 @@ class RodllerPostsBlock extends Component{
     }
 
     render() {
-
         const {attributes: { layout, postsToShow, categories, order, orderBy, author, displayLoadMore }, className, setAttributes} = this.props;
 
         const {posts, categoriesList, authors} = this.props;
 
-        const authorsList = ( authors.map( author => {
+        const authorsList = ( authors.map( singleAuthor => {
             return {
-                label: author.name,
-                value: author.id
+                label: singleAuthor.name,
+                value: singleAuthor.id
             };
         } ) );
 
@@ -129,7 +128,6 @@ export default withSelect( (select, props) => {
             categories: categories,
             order: order,
             orderby: orderBy,
-            exclude: parseInt(findGetParameter('post')),
             author: author,
         } ),
         categoriesList: getEntityRecords( 'taxonomy', 'category', {per_page: 100} ),
