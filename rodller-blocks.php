@@ -150,7 +150,7 @@ register_block_type( 'rodller/rodller-posts', array(
 		),
 		'displayLoadMore'  => array(
 			'type' => 'boolean',
-			'default' => true
+			'default' => false
 		),
 	),
 	'render_callback' => 'rodller_posts_block_render',
@@ -163,7 +163,7 @@ if ( ! function_exists( 'rodller_posts_block_render' ) ):
 	function rodller_posts_block_render( $attributes ) {
 
 		$args = [
-			'numberposts' => intval($attributes['postsToShow']),
+			'posts_per_page' => intval($attributes['postsToShow']),
 			'exclude' => get_queried_object_id(),
 			'post_status' => 'publish',
 		];
@@ -176,19 +176,13 @@ if ( ! function_exists( 'rodller_posts_block_render' ) ):
 		    $args['author'] = intval($attributes['author']);
 		}
 	
-		$recent_posts = get_posts( $args );
-		
-		if ( empty( $recent_posts ) ) {
-			return '<p>No posts</p>';
-		}
+		$posts_query = new WP_Query( $args );
 		
 		$markup = '<ul>';
 		
-		foreach ( $recent_posts as $post ) {
-			
-			$post_id = $post->ID;
-			$markup  .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_permalink( $post_id ) ), esc_html( get_the_title( $post_id ) ) );
-		}
+		while ( $posts_query->have_posts() ) : $posts_query->the_post();
+			$markup  .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_the_permalink( ) ), esc_html( get_the_title( ) ) );
+		endwhile;
 		
 		$markup .= "</ul>";
 		

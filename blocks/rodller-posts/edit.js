@@ -51,8 +51,11 @@ class RodllerPostsBlock extends Component{
                 return <p>{ __( 'No Posts', 'rodller-blocks' ) }</p>;
             }
 
-            return (
-                <ul className={ className }>
+            return [
+
+                <ul className={ classnames({
+                    layout: 'layout-' + layout
+                }) }>
                     { posts.map( post => {
                         return (
                             <li>
@@ -62,8 +65,14 @@ class RodllerPostsBlock extends Component{
                             </li>
                         );
                     }) }
-                </ul>
-            );
+                </ul>,
+                <div>
+                    { displayLoadMore &&
+                        <a className={'rodller-blocks-load-more-button'}>{__('Load More', 'rodller-blocks')}</a>
+                    }
+                </div>
+            ]
+            ;
         };
 
         return [
@@ -96,8 +105,7 @@ class RodllerPostsBlock extends Component{
                         />
                     }
                     <ToggleControl
-                        label="Display Load More button"
-                        help={ displayLoadMore ? '' : 'No fixed background.' }
+                        label= { __( 'Display Load More button', 'rodller-blocks' ) }
                         checked={ displayLoadMore }
                         onChange={ ( value ) => this.props.setAttributes( { displayLoadMore: value } ) }
                     />
@@ -122,7 +130,7 @@ export default withSelect( (select, props) => {
             order: order,
             orderby: orderBy,
             exclude: parseInt(findGetParameter('post')),
-            author: author
+            author: author,
         } ),
         categoriesList: getEntityRecords( 'taxonomy', 'category', {per_page: 100} ),
         authors: getAuthors()
