@@ -65,22 +65,34 @@ class RodllerPostsBlock extends Component {
                 return <p>{__('No Posts', 'rodller-blocks')}</p>;
             }
 
+            let postsClassCounter = 0;
+
             return [
-                <ul className={'rodller-blocks-posts'}>
-                    {posts.map(post => {
+                <ul className={'rodller-blocks-posts row'}>
+                    {posts.map( (post) => {
+
+                        let liClass = {};
+
+                        liClass['layout-' + layout] = true;
+                        liClass['col-' + rodller_blocks.layouts[layout].columns[postsClassCounter]] = true;
+
+                        if((rodller_blocks.layouts[layout].columns.length - 1) === postsClassCounter){
+                            postsClassCounter = 0;
+                        }else{
+                            postsClassCounter++;
+                        }
+
 
                         return (
-                            <li className={classnames({
-                                layout: 'layout-' + layout
-                            })}>
+                            <li className={classnames(liClass)}>
                                 {
                                     rodller_blocks.layouts[layout].order.map((layoutOrder) => {
                                         switch (layoutOrder) {
                                             case 'image':
-                                                if( post.featured_image_sizes_url !== undefined && post.featured_image_sizes_url && post.featured_image_sizes_url.medium != null ){
+                                                if( post.featured_image_sizes_url !== undefined && post.featured_image_sizes_url && post.featured_image_sizes_url[rodller_blocks.layouts[layout].image_size] != null ){
                                                     return <div className="rodller-blocks-post-image">
                                                         <a href={post.link} target="_blank" rel="bookmark">
-                                                            <img src={post.featured_image_sizes_url.medium} alt={decodeEntities(post.title.rendered.trim()) || __('(Untitled)', 'rodller-blocks')}/>
+                                                            <img src={post.featured_image_sizes_url[rodller_blocks.layouts[layout].image_size]} alt={decodeEntities(post.title.rendered.trim()) || __('(Untitled)', 'rodller-blocks')}/>
                                                         </a>
                                                     </div>;
                                                 }

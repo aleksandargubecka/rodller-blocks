@@ -53,12 +53,7 @@ add_action( 'rest_api_init', 'rodller_blocks_register_rest_fields' );
 
 if(!function_exists('rodller_blocks_get_posts_featured_images')):
     function rodller_blocks_get_posts_featured_images( $object ){
-		$fetch_image_sizes = apply_filters('rodller_blocks_modify_posts_featured_images', [
-			'thumbnail',
-			'medium',
-			'large',
-			'full'
-		]);
+		$fetch_image_sizes = get_intermediate_image_sizes();
 		
 		$images = [];
 		
@@ -73,7 +68,7 @@ if(!function_exists('rodller_blocks_get_posts_featured_images')):
 		        $images[$fetch_image_size] = $image[0];
 		    }
 		}
-	    
+	 
 	    return $images;
     }
 endif;

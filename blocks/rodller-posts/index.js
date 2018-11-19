@@ -2,6 +2,8 @@
  * Internal block libraries
  */
 import edit from './edit';
+import './style.scss';
+import './editor.scss';
 
 const {__} = wp.i18n;
 

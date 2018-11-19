@@ -32,12 +32,9 @@ if ( ! function_exists( 'rodller_blocks_get_js_settings' ) ):
 				'a' => [
 					'value' => 'a',
 					'label' => 'Layout A',
-					'order' => ['image', 'title', 'meta', 'excerpt']
-				],
-				'b' => [
-					'value' => 'b',
-					'label' => 'Layout B',
-					'order' => ['title', 'image', 'meta', 'excerpt']
+					'order' => ['image', 'title', 'meta', 'excerpt'],
+					'columns' => ['6', '6'],
+					'image_size' => 'large'
 				],
 			],
 		] );
