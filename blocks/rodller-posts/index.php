@@ -100,36 +100,40 @@ if ( ! function_exists( 'rodller_posts_block_render' ) ):
 			$args['paged'] = $page;
 		}
 		
-		$ignore_markup = apply_filters( 'rodller_blocks_ignore_markup', false );
-		
 		$posts_query = new WP_Query( $args );
 		
-		$markup = '';
-		
-		if ( ! $ignore_markup ):
-			$markup = $options['before'];
-			
-			while ( $posts_query->have_posts() ) : $posts_query->the_post();
-				$markup .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_the_permalink() ), esc_html( get_the_title() ) );
-				
-				$rodller_block_listed[] = get_the_ID();
-			endwhile;
-			
-			
-			if ( $options['allow_load_more'] && $posts_query->found_posts > ( intval( $attributes['postsToShow'] ) * intval($page) ) ) :
-				if ( $attributes['displayLoadMore'] ) :
-					$load_more_button_classes = apply_filters( 'modify_rodller_posts_block_loadmore_button_classes', 'rodller-blocks-btn' );
-					
-					$markup .= '<li class="rodller-blocks-load-more-button-wrapper"><a href="javascript:void(0)" data-attributes="' . esc_attr( json_encode( $attributes ) ) . '" data-paged="1" data-found="' . intval($posts_query->found_posts) . '" class="rodller-blocks-load-more-button ' . esc_attr( $load_more_button_classes ) . '">' . __( 'Load More', 'rodller-blocks' ) . '</a></li>';
-				endif;
-			endif;
-			
-			$markup .= $options['after'];
-		
-		endif;
-		
-		$markup = apply_filters( 'modify_rodller_posts_block_render', $markup, $posts_query, $args, $attributes );
-		
-		return $markup;
+		ob_start();
+
+		do_action('rodller_posts_block_render_html', $attributes, $posts_query, $page,  $options);
+
+		return ob_get_clean();
 	}
+endif;
+
+add_action( 'rodller_posts_block_render_html', 'rodller_blocks_posts_block_render_html', 10, 4 );
+if(!function_exists('rodller_blocks_posts_block_render_html')):
+    function rodller_blocks_posts_block_render_html($attributes, $posts_query, $page, $options){
+	
+	
+	    $markup = $options['before'];
+		   
+	    while ( $posts_query->have_posts() ) : $posts_query->the_post();
+		    $markup .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_the_permalink() ), esc_html( get_the_title() ) );
+		
+		    $rodller_block_listed[] = get_the_ID();
+	    endwhile;
+	
+	
+	    if ( $options['allow_load_more'] && $posts_query->found_posts > ( intval( $attributes['postsToShow'] ) * intval($page) ) ) :
+		    if ( $attributes['displayLoadMore'] ) :
+			    $load_more_button_classes = apply_filters( 'modify_rodller_posts_block_loadmore_button_classes', 'rodller-blocks-btn' );
+			
+			    $markup .= '<li class="rodller-blocks-load-more-button-wrapper"><a href="javascript:void(0)" data-attributes="' . esc_attr( json_encode( $attributes ) ) . '" data-paged="1" data-found="' . intval($posts_query->found_posts) . '" class="rodller-blocks-load-more-button ' . esc_attr( $load_more_button_classes ) . '">' . __( 'Load More', 'rodller-blocks' ) . '</a></li>';
+		    endif;
+	    endif;
+	
+	    $markup .= $options['after'];
+	    
+	    echo $markup;
+    }
 endif;
