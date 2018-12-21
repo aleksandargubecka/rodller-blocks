@@ -21,7 +21,7 @@ const {
 const {withSelect} = wp.data;
 
 
-class RodllerPostsBlock extends Component {
+class RodllerPostsBlockEdit extends Component {
     constructor() {
         super(...arguments);
     }
@@ -39,9 +39,6 @@ class RodllerPostsBlock extends Component {
                 label: rodller_blocks.layouts[objectKey].label,
             })
         });
-
-        console.log();
-
 
         const authorsList = (authors.map(singleAuthor => {
             return {
@@ -171,4 +168,4 @@ export default withSelect((select, props) => {
         authors: getAuthors()
     };
 
-})(RodllerPostsBlock);
+})(RodllerPostsBlockEdit);

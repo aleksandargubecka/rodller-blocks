@@ -1,6 +1,7 @@
 (function ($) {
 
     var RodllerBlocks = {
+
         LoadMore: {
             init: function () {
                 $('body').on('click', '.rodller-blocks-load-more-button', this.clickCallback)
@@ -39,6 +40,22 @@
                 page++;
                 $elem.data('paged', page);
             }
+        },
+
+        Sliders: {
+            init: function (){
+                $('.rodller-slider').each(function (){
+                    var $this = $(this);
+                    $this.addClass('owl-carousel');
+                    $this.owlCarousel({
+                        items: 6,
+                        loop: true,
+                        autoplay: true,
+                        autoplayTimeout: 3000,
+                        margin: 20
+                    });
+                });
+            }
         }
     };
 
@@ -46,5 +63,6 @@
 
     $(document).ready(function () {
         RodllerBlocks.LoadMore.init();
+        RodllerBlocks.Sliders.init();
     });
 })(jQuery);
