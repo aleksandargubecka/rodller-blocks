@@ -6,5 +6,6 @@ import './i18n.js';
 /**
  * Import registerBlockType blocks
  */
-import './rodller-posts/';
+import './posts/';
 import './slider/';
+import './share/';

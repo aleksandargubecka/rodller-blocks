@@ -20,7 +20,6 @@ const {
 
 const {withSelect} = wp.data;
 
-
 class RodllerPostsBlockEdit extends Component {
     constructor() {
         super(...arguments);

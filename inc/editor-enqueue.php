@@ -5,7 +5,7 @@
  */
 if ( ! function_exists( 'rodller_blocks_editor_scripts' ) ):
 	function rodller_blocks_editor_scripts() {
-		wp_register_script( 'rodller-blocks-js', RODLLER_BLOCKS_DIR_URI . '/assets/js/editor.blocks.js', [
+		wp_register_script( 'rodller-blocks-js', RODLLER_BLOCKS_DIR_URI . 'assets/js/editor.blocks.js', [
 			'wp-i18n',
 			'wp-element',
 			'wp-blocks',
@@ -18,18 +18,18 @@ if ( ! function_exists( 'rodller_blocks_editor_scripts' ) ):
 		
 		wp_enqueue_script( 'rodller-blocks-js' );
 		
-		if ( is_admin() ) {
-			wp_enqueue_style( 'rodller-blocks-editor-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/blocks.editor.css' , [ 'wp-blocks' ], RODLLER_BLOCKS_VERSION );
-		}
+		wp_enqueue_style( 'rodller-blocks-editor-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.editor.css' , [ ], RODLLER_BLOCKS_VERSION );
+		
+		wp_enqueue_style( 'rodller-blocks-font-awesome-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/all.css' , [ ], '5.6.3' );
 	}
 endif;
 add_action( 'enqueue_block_editor_assets', 'rodller_blocks_editor_scripts' );
 
 if(!function_exists('rodller_blocks_enqueue_frontend_scripts')):
     function rodller_blocks_enqueue_frontend_scripts(){
-	    wp_enqueue_style( 'hehsed-core-frontend-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/blocks.style.css' , [], RODLLER_BLOCKS_VERSION );
+	    wp_enqueue_style( 'hehsed-core-frontend-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.style.css' , [], RODLLER_BLOCKS_VERSION );
 	
-	    wp_enqueue_script( 'hehsed-core-frontend-js', RODLLER_BLOCKS_DIR_URI . '/assets/js/frontend.js' , ['jquery'], RODLLER_BLOCKS_VERSION );
+	    wp_enqueue_script( 'hehsed-core-frontend-js', RODLLER_BLOCKS_DIR_URI . 'assets/js/frontend.js' , ['jquery'], RODLLER_BLOCKS_VERSION );
     }
 endif;
 add_action( 'wp_enqueue_scripts', 'rodller_blocks_enqueue_frontend_scripts' );
@@ -42,7 +42,7 @@ if ( ! function_exists( 'rodller_blocks_get_js_settings' ) ):
 					'value' => 'a',
 					'label' => 'Layout A',
 					'order' => ['image', 'title', 'meta', 'excerpt'],
-					'columns' => ['6', '6'],
+					'columns' => ['12'],
 					'image_size' => 'large'
 				],
 			],

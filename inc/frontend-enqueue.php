@@ -12,6 +12,8 @@ if ( ! function_exists( 'rodller_blocks_frontend_scripts' ) ):
 		wp_enqueue_script('rodller-blocks-frontend-js');
 		
 		wp_enqueue_style( 'rodller-blocks-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/blocks.style.css' , [ 'wp-blocks' ], RODLLER_BLOCKS_VERSION );
+		
+		wp_enqueue_style( 'rodller-blocks-font-awesome-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/all.css' , [ ], '5.6.3' );
 	}
 endif;
 add_action( 'enqueue_block_assets', 'rodller_blocks_frontend_scripts' );

@@ -41,4 +41,6 @@ require_once plugin_dir_path( __FILE__ ) . 'inc/editor-enqueue.php';
 
 require_once plugin_dir_path( __FILE__ ) . 'inc/ajax.php';
 
-require_once plugin_dir_path( __FILE__ ) . 'blocks/rodller-posts/index.php';
+require_once plugin_dir_path( __FILE__ ) . 'blocks/posts/index.php';
+
+require_once plugin_dir_path( __FILE__ ) . 'blocks/share/index.php';

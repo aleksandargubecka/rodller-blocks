@@ -1,37 +1,49 @@
 <?php
 
-register_block_type( 'rodller/rodller-posts', [
-	'attributes'      => [
-		'layout'          => [
-			'type'    => 'string',
-			'default' => 'a'
-		],
-		'postsToShow'     => [
-			'type'    => 'number',
-			'default' => 4,
-		],
-		'categories'      => [
-			'type' => 'string',
-		],
-		'order'           => [
-			'type'    => 'string',
-			'default' => 'desc',
-		],
-		'orderBy'         => [
-			'type'    => 'string',
-			'default' => 'date',
-		],
-		'author'          => [
-			'type' => 'string',
-		],
-		'displayLoadMore' => [
-			'type'    => 'boolean',
-			'default' => false,
-		],
-	],
-	'render_callback' => 'rodller_posts_block_render',
-] );
-
+if(!function_exists(' rodller_blocks_register_rodller_posts')):
+    function  rodller_blocks_register_rodller_posts(){
+	
+	    // Check if the register function exists
+	    if ( ! function_exists( 'register_block_type' ) ) {
+		    return;
+	    }
+	
+	    register_block_type( 'rodller/rodller-posts', [
+		    'attributes'      => [
+			    'layout'          => [
+				    'type'    => 'string',
+				    'default' => 'a'
+			    ],
+			    'postsToShow'     => [
+				    'type'    => 'number',
+				    'default' => 4,
+			    ],
+			    'categories'      => [
+				    'type' => 'string',
+			    ],
+			    'order'           => [
+				    'type'    => 'string',
+				    'default' => 'desc',
+			    ],
+			    'orderBy'         => [
+				    'type'    => 'string',
+				    'default' => 'date',
+			    ],
+			    'author'          => [
+				    'type' => 'string',
+			    ],
+			    'displayLoadMore' => [
+				    'type'    => 'boolean',
+				    'default' => false,
+			    ],
+		    ],
+		    'render_callback' => 'rodller_posts_block_render',
+	    ] );
+	
+	
+    }
+endif;
+add_action( 'init', 'rodller_blocks_register_rodller_posts' );
 
 /**
  * Create API fields for additional info
@@ -78,14 +90,16 @@ endif;
  * Server rendering for /blocks/rodller-posts
  */
 if ( ! function_exists( 'rodller_posts_block_render' ) ):
-	function rodller_posts_block_render( $attributes, $page = 0, $options = ['before' => '<ul class="rodller-blocks-posts-list">', 'after' => '</ul>', 'allow_load_more' => true] ) {
+	function rodller_posts_block_render( $attributes, $page = 0, $options = ['before' => '<ul class="rodller-blocks-posts row">', 'after' => '</ul>', 'allow_load_more' => true] ) {
 		
 		$args = [
-			'posts_per_page' => intval( $attributes['postsToShow'] ),
-			'post__not_in'   => [ get_queried_object_id() ],
-			'post_status'    => 'publish',
-			'order'          => $attributes['order'],
-			'order_by'       => $attributes['orderBy'],
+			'posts_per_page'       => intval( $attributes['postsToShow'] ),
+			'post__not_in'         => [ get_queried_object_id() ],
+			'post_status'          => 'publish',
+			'order'                => $attributes['order'],
+			'order_by'             => $attributes['orderBy'],
+			'post_type'            => 'post',
+			'ignore_sticky_posts'  => 1,
 		];
 		
 		if ( ! empty( $attributes['categories'] ) ) {
@@ -114,11 +128,19 @@ add_action( 'rodller_posts_block_render_html', 'rodller_blocks_posts_block_rende
 if(!function_exists('rodller_blocks_posts_block_render_html')):
     function rodller_blocks_posts_block_render_html($attributes, $posts_query, $page, $options){
 	
-	
 	    $markup = $options['before'];
 		   
 	    while ( $posts_query->have_posts() ) : $posts_query->the_post();
-		    $markup .= sprintf( '<li><a href="%1$s">%2$s</a></li>', esc_url( get_the_permalink() ), esc_html( get_the_title() ) );
+	    
+	        $markup .= '
+			    <li id="post-' . get_the_ID() . '" class="rodller-blocks-posts layout-a col-12">
+				    <a href="' . esc_url( get_the_permalink() ) . '" class="rodller-posts-title">
+					    <h2>' . esc_html( get_the_title() ) . '</h2>
+				    </a>
+				    <div class="rodller-posts-expert">
+					    <p>' . get_the_excerpt() . '</p>
+				    </div>
+			    </li>';
 		
 		    $rodller_block_listed[] = get_the_ID();
 	    endwhile;
