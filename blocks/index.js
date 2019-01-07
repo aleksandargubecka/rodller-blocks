@@ -9,3 +9,5 @@ import './i18n.js';
 import './posts/';
 import './slider/';
 import './share/';
+import './accordion/';
+import './team-member/';

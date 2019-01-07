@@ -1,6 +1,3 @@
-/**
- * Internal block libraries
- */
 import Inspector from './inspector';
 // import './style.scss';
 // import './editor.scss';
@@ -60,35 +57,35 @@ registerBlockType('rodller/rodller-share', {
                 }
                 { google &&
                 <li>
-                    <a className='ab-share-google' title={__( 'Share on Google', 'atomic-blocks' )}>
+                    <a className='ab-share-google' title={__( 'Share on Google', 'rodller-blocks' )}>
                         <i class="fab fa-google"></i>
                     </a>
                 </li>
                 }
                 { pinterest &&
                 <li>
-                    <a className='ab-share-pinterest' title={__( 'Share on Pinterest', 'atomic-blocks' )}>
+                    <a className='ab-share-pinterest' title={__( 'Share on Pinterest', 'rodller-blocks' )}>
                         <i class="fab fa-pinterest-p"></i>
                     </a>
                 </li>
                 }
                 { linkedin &&
                 <li>
-                    <a className='ab-share-linkedin' title={__( 'Share on LinkedIn', 'atomic-blocks' )}>
+                    <a className='ab-share-linkedin' title={__( 'Share on LinkedIn', 'rodller-blocks' )}>
                         <i class="fab fa-linkedin"></i>
                     </a>
                 </li>
                 }
                 { reddit &&
                 <li>
-                    <a className='ab-share-reddit' title={__( 'Share on reddit', 'atomic-blocks' )}>
+                    <a className='ab-share-reddit' title={__( 'Share on reddit', 'rodller-blocks' )}>
                         <i class="fab fa-reddit-alien"></i>
                     </a>
                 </li>
                 }
                 { email &&
                 <li>
-                    <a className='ab-share-email' title={__( 'Share via Email', 'atomic-blocks' )}>
+                    <a className='ab-share-email' title={__( 'Share via Email', 'rodller-blocks' )}>
                         <i class="fas fa-envelope"></i>
                     </a>
                 </li>
