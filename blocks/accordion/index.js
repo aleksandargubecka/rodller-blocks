@@ -116,6 +116,9 @@ registerBlockType( 'rodller/rodller-accordion', {
                     accordionAlignment,
                     'rodller-block-accordion',
                 ) }
+                style={{
+                    textAlign: accordionAlignment
+                }}
             >
                 <details open={accordionOpen}>
                     <summary class="rodller-accordion-title">

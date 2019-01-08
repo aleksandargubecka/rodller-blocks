@@ -18,19 +18,22 @@ export default class ProfileBox extends Component {
     render() {
 
         // Setup the attributes
-        const { profileAlignment, profileImgURL,  profileAvatarShape, profileLayout  } = this.props.attributes;
+        const { profileAlignment, profileImgURL, profileLayout  } = this.props.attributes;
 
         return (
             <div
                 className={ classnames(
                     this.props.className,
                     profileAlignment,
-                    profileAvatarShape,
                     { 'rodller-has-avatar': profileImgURL },
                     'rodller-profile-layout-' + profileLayout,
                     'rodller-block-profile',
                     'rodller-profile-columns',
-                ) }>
+                ) }
+                style={{
+                    textAlign: profileAlignment
+                }}
+            >
                 { this.props.children }
             </div>
         );

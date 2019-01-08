@@ -5,3 +5,49 @@
   list-style: none;
   margin: 0;
   padding: 0; }
+.wp-block-rodller-rodller-profile-box .rodller-profile-column {
+  padding: 5px 10%; }
+
+.wp-block-rodller-rodller-profile-box.rodller-profile-layout-horizontal {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  width: 100%; }
+  .wp-block-rodller-rodller-profile-box.rodller-profile-layout-horizontal .rodller-profile-column {
+    padding: 15px; }
+  .wp-block-rodller-rodller-profile-box.rodller-profile-layout-horizontal .rodller-profile-avatar-wrap {
+    -ms-flex: 1 0 0px;
+        flex: 1 0 0; }
+  .wp-block-rodller-rodller-profile-box.rodller-profile-layout-horizontal .rodller-profile-content-wrap {
+    -ms-flex: 3 0 0px;
+        flex: 3 0 0; }
+
+.wp-block-rodller-rodller-profile-box h2.rodller-profile-name {
+  margin: .2em 0 .2em; }
+
+.wp-block-rodller-rodller-profile-box ul.rodller-social-links {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .wp-block-rodller-rodller-profile-box ul.rodller-social-links li {
+    display: inline-block;
+    margin-right: 10px; }
+    .wp-block-rodller-rodller-profile-box ul.rodller-social-links li a {
+      font-size: 17px;
+      line-height: 40px;
+      width: 40px;
+      background-color: #134d80;
+      display: block;
+      text-align: center;
+      border-radius: 50%;
+      transition: opcaity 0.4s ease-in-out; }
+      .wp-block-rodller-rodller-profile-box ul.rodller-social-links li a i {
+        color: #fff; }
+      .wp-block-rodller-rodller-profile-box ul.rodller-social-links li a:hover {
+        opacity: .7; }
+
+.wp-block-rodller-rodller-profile-box .rodller-profile-image-round img {
+  border-radius: 50%; }

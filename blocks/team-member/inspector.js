@@ -55,7 +55,14 @@ export default class Inspector extends Component {
                         description={ __( 'Choose between a horizontal or vertical avatar shape.', 'rodller-blocks' ) }
                         options={ profileLayoutOptions }
                         value={ profileLayout }
-                        onChange={ ( value ) => this.props.setAttributes( { profileLayout: value } ) }
+                        onChange={ ( value ) => {
+                                if( value === 'horizontal'){
+                                    this.props.setAttributes( { profileLayout: value, profileAlignment: 'left' } );
+                                }else{
+                                    this.props.setAttributes( { profileLayout: value, profileAlignment: 'center' } );
+                                }
+                            }
+                        }
                     />
                     <SelectControl
                         label={ __( 'Avatar Shape', 'rodller-blocks' ) }

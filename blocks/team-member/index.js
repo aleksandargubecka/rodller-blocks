@@ -8,8 +8,8 @@ import AvatarColumn from './avatar';
 import icons from './icons';
 
 // Import styles
-// import './styles/style.scss';
-// import './styles/editor.scss';
+import './style.scss';
+import './editor.scss';
 
 // Internationalization
 const { __ } = wp.i18n;
@@ -166,17 +166,12 @@ registerBlockType( 'rodller/rodller-profile-box', {
                             buttonProps={ {
                                 className: 'change-image'
                             } }
-                            onSelect={ ( img ) => {
-
-                                	console.log(img);
-
-                                setAttributes(
+                            onSelect={ ( img ) => setAttributes(
                                     {
                                         profileImgID: img.id,
-                                        profileImgURL: img.url,
+                                        profileImgURL: img.sizes.medium !== undefined && img.sizes.medium.url !== undefined ? img.sizes.medium.url : img.url,
                                     }
-                                );
-                            }
+                                )
                             }
                             allowed={ ALLOWED_MEDIA_TYPES }
                             type="image"
