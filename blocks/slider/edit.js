@@ -48,17 +48,27 @@ export default class RodllerSliderEdit extends Component{
     render(){
         const { attributes: { images, align }, className, setAttributes } = this.props;
 
+        jQuery('.rodller-slider').addClass('owl-carousel').owlCarousel({
+            items: 6,
+            loop: true,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            margin: 20
+        });
+
         const onSelectImages = ( images ) => {
             setAttributes( {
                 images: images.map( ( image ) => pickRelevantMediaFiles( image ) )
             } );
+
+            jQuery('.rodller-slider').owlCarousel('update');
         };
 
-        const dropZone = (
-            <DropZone
-                onFilesDrop={ this.addFiles }
-            />
-        );
+        // const dropZone = (
+        //     <DropZone
+        //         onFilesDrop={ this.addFiles }
+        //     />
+        // );
 
         const controls = (
             <BlockControls>
@@ -108,9 +118,9 @@ export default class RodllerSliderEdit extends Component{
             <div>
                 { controls }
                 <ul className={ `rodller-slider align-${ align }` }>
-                    { images.map( ( img, index ) => {
+                    { images.map( ( img, i ) => {
                         return (
-                            <li>
+                            <li key={i}>
                                 <img
                                     src={ img.url }
                                     alt={ img.alt }

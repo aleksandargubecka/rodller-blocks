@@ -73,9 +73,9 @@ registerBlockType('rodller/rodller-slider', {
         return (
             <div>
                 <ul className={ `rodller-slider align-${ align }` }>
-                    { images.map( ( img, index ) => {
+                    { images.map( ( img, i ) => {
                         return (
-                            <li>
+                            <li key={i}>
                                 <img
                                     src={ img.url }
                                     alt={ img.alt }

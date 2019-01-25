@@ -121,12 +121,12 @@ registerBlockType( 'rodller/rodller-accordion', {
                 }}
             >
                 <details open={accordionOpen}>
-                    <summary class="rodller-accordion-title">
+                    <summary className="rodller-accordion-title">
                         <RichText.Content
                             value={ accordionTitle }
                         />
                     </summary>
-                    <div class="rodller-accordion-text">
+                    <div className="rodller-accordion-text">
                         <InnerBlocks.Content />
                     </div>
                 </details>

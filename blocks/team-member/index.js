@@ -179,7 +179,7 @@ registerBlockType( 'rodller/rodller-profile-box', {
                             render={ ( { open } ) => (
                                 <Button onClick={ open }>
                                     { ! profileImgID ? icons.upload : <img
-                                        class="rodller-profile-avatar"
+                                        className="rodller-profile-avatar"
                                         src={ profileImgURL }
                                         alt="avatar"
                                     />  }
@@ -244,7 +244,7 @@ registerBlockType( 'rodller/rodller-profile-box', {
                     <AvatarColumn { ...props }>
                         <div className={'rodller-profile-image-' + profileAvatarShape}>
                             <img
-                                class="rodller-profile-avatar"
+                                className="rodller-profile-avatar"
                                 src={ profileImgURL }
                                 alt="avatar"
                             />

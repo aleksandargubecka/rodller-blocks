@@ -18,6 +18,9 @@ if ( ! function_exists( 'rodller_blocks_editor_scripts' ) ):
 		
 		wp_enqueue_script( 'rodller-blocks-js' );
 		
+		wp_enqueue_style( 'rodller-blocks-owl-carousel-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/owl.carousel.min.css', [], RODLLER_BLOCKS_VERSION );
+		wp_enqueue_script( 'rodller-blocks-owl-carousel-js', RODLLER_BLOCKS_DIR_URI . 'assets/js/owl.carousel.min.js', [], RODLLER_BLOCKS_VERSION );
+		
 		wp_enqueue_style( 'rodller-blocks-editor-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.editor.css' , [ ], RODLLER_BLOCKS_VERSION );
 		
 		wp_enqueue_style( 'rodller-blocks-font-awesome-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/all.css' , [ ], '5.6.3' );

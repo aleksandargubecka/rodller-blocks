@@ -65,7 +65,7 @@ class RodllerPostsBlockEdit extends Component {
 
             return [
                 <ul className={'rodller-blocks-posts row'}>
-                    {posts.map( (post) => {
+                    {posts.map( (post, i) => {
 
                         let liClass = {};
 
@@ -80,7 +80,7 @@ class RodllerPostsBlockEdit extends Component {
 
 
                         return (
-                            <li className={classnames(liClass)}>
+                            <li className={classnames(liClass)} key={i}>
                                 {
                                     rodller_blocks.layouts[layout].order.map((layoutOrder) => {
                                         switch (layoutOrder) {
