@@ -18,19 +18,18 @@ if ( ! function_exists( 'rodller_blocks_editor_scripts' ) ):
 		
 		wp_enqueue_script( 'rodller-blocks-js' );
 		
-		wp_enqueue_style( 'rodller-blocks-owl-carousel-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/owl.carousel.min.css', [], RODLLER_BLOCKS_VERSION );
-		wp_enqueue_script( 'rodller-blocks-owl-carousel-js', RODLLER_BLOCKS_DIR_URI . 'assets/js/owl.carousel.min.js', [], RODLLER_BLOCKS_VERSION );
+		wp_enqueue_style( 'rodller-blocks-owl-carousel-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/slick.min.css', false, RODLLER_BLOCKS_VERSION );
 		
-		wp_enqueue_style( 'rodller-blocks-editor-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.editor.css' , [ ], RODLLER_BLOCKS_VERSION );
+		wp_enqueue_style( 'rodller-blocks-editor-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.editor.css' , false, RODLLER_BLOCKS_VERSION );
 		
-		wp_enqueue_style( 'rodller-blocks-font-awesome-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/all.css' , [ ], '5.6.3' );
+		wp_enqueue_style( 'rodller-blocks-font-awesome-css', RODLLER_BLOCKS_DIR_URI . '/assets/css/all.css' , false, '5.6.3' );
 	}
 endif;
 add_action( 'enqueue_block_editor_assets', 'rodller_blocks_editor_scripts' );
 
 if(!function_exists('rodller_blocks_enqueue_frontend_scripts')):
     function rodller_blocks_enqueue_frontend_scripts(){
-	    wp_enqueue_style( 'hehsed-core-frontend-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.style.css' , [], RODLLER_BLOCKS_VERSION );
+	    wp_enqueue_style( 'hehsed-core-frontend-css', RODLLER_BLOCKS_DIR_URI . 'assets/css/blocks.style.css' , false, RODLLER_BLOCKS_VERSION );
 	
 	    wp_enqueue_script( 'hehsed-core-frontend-js', RODLLER_BLOCKS_DIR_URI . 'assets/js/frontend.js' , ['jquery'], RODLLER_BLOCKS_VERSION );
     }

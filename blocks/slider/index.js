@@ -18,6 +18,20 @@ const {
     registerBlockType,
 } = wp.blocks;
 
+// jQuery(document).ready(function (){
+//     setTimeout(function (){
+//
+//         jQuery('.rodller-slider').addClass('owl-carousel').owlCarousel({
+//             items: 6,
+//             loop: true,
+//             autoplay: true,
+//             autoplayTimeout: 3000,
+//             margin: 20
+//         });
+//
+//     }, 2000);
+// });
+
 registerBlockType('rodller/rodller-slider', {
     title: __('Rodller Slider', 'rodller-blocks'),
     description: __('Add posts to slider block.', 'rodller-blocks'),

@@ -25,6 +25,9 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
-    "@wordpress/i18n": "^3.0.1"
+    "@wordpress/i18n": "^3.0.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-slick": "^0.23.2"
   }
 }

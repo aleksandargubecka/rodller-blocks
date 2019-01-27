@@ -3,6 +3,8 @@
  */
 import { filter, pick, map, get } from 'lodash';
 import './editor.scss';
+import React from "react";
+import Slider from "react-slick";
 
 /**
  * Internal block libraries
@@ -36,6 +38,7 @@ export const pickRelevantMediaFiles = ( image ) => {
 
     return imageProps;
 };
+
 /**
  * Register example blocksetAttributes
  */
@@ -48,20 +51,10 @@ export default class RodllerSliderEdit extends Component{
     render(){
         const { attributes: { images, align }, className, setAttributes } = this.props;
 
-        jQuery('.rodller-slider').addClass('owl-carousel').owlCarousel({
-            items: 6,
-            loop: true,
-            autoplay: true,
-            autoplayTimeout: 3000,
-            margin: 20
-        });
-
         const onSelectImages = ( images ) => {
             setAttributes( {
                 images: images.map( ( image ) => pickRelevantMediaFiles( image ) )
             } );
-
-            jQuery('.rodller-slider').owlCarousel('update');
         };
 
         // const dropZone = (
@@ -114,22 +107,30 @@ export default class RodllerSliderEdit extends Component{
             );
         }
 
+        const settings = {
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        };
+
         return (
             <div>
                 { controls }
-                <ul className={ `rodller-slider align-${ align }` }>
+                <Slider {...settings} className={ `rodller-slider align-${ align }` }>
                     { images.map( ( img, i ) => {
                         return (
-                            <li key={i}>
+                            <div key={i}>
                                 <img
                                     src={ img.url }
                                     alt={ img.alt }
                                     data-id={ img.id }
                                 />
-                            </li>
+                            </div>
                         );
                     } ) }
-                </ul>
+                </Slider>
             </div>
         );
     }
