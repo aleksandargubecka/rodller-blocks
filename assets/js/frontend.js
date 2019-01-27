@@ -46,13 +46,10 @@
             init: function (){
                 $('.rodller-slider').each(function (){
                     var $this = $(this);
-                    $this.addClass('owl-carousel');
-                    $this.owlCarousel({
-                        items: 6,
-                        loop: true,
-                        autoplay: true,
-                        autoplayTimeout: 3000,
-                        margin: 20
+                    $this.slick({
+                        speed: parseInt($this.attr('speed')),
+                        slidesToShow: parseInt($this.attr('slidestoshow')),
+                        slidesToScroll: parseInt($this.attr('slidestoscroll'))
                     });
                 });
             }
