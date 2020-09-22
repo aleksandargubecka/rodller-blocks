@@ -111,7 +111,7 @@ export default class RodllerSliderEdit extends Component{
             dots: true,
             infinite: true,
             speed: 500,
-            slidesToShow: 2,
+            slidesToShow: 5,
             slidesToScroll: 1
         };
 

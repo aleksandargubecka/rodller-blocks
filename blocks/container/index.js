@@ -18,249 +18,254 @@ const { registerBlockType } = wp.blocks;
 
 // Register editor components
 const {
-    AlignmentToolbar,
-    BlockControls,
-    BlockAlignmentToolbar,
-    MediaUpload,
-    RichText,
-    InnerBlocks,
+	AlignmentToolbar,
+	BlockControls,
+	BlockAlignmentToolbar,
+	MediaUpload,
+	RichText,
+	InnerBlocks,
 } = wp.editor;
 
 // Register components
 const {
-    Button,
-    withFallbackStyles,
-    IconButton,
-    Dashicon,
-    withState,
-    Toolbar,
+	Button,
+	withFallbackStyles,
+	IconButton,
+	Dashicon,
+	withState,
+	Toolbar,
 } = wp.components;
 
 const blockAttributes = {
-    containerPaddingTop: {
-        type: 'number',
-        default: 0,
-    },
-    containerPaddingRight: {
-        type: 'number',
-        default: 0,
-    },
-    containerPaddingBottom: {
-        type: 'number',
-        default: 0,
-    },
-    containerPaddingLeft: {
-        type: 'number',
-        default: 0,
-    },
-    containerMarginTop: {
-        type: 'number',
-        default: 0,
-    },
-    containerMarginBottom: {
-        type: 'number',
-        default: 0,
-    },
-    containerWidth: {
-        type: 'string',
-        default: 'center',
-    },
-    containerMaxWidth: {
-        type: 'number',
-        default: 1600,
-    },
-    containerBackgroundColor: {
-        type: 'string',
-        default: '#fff',
-    },
-    containerImgURL: {
-        type: 'string',
-        source: 'attribute',
-        attribute: 'src',
-        selector: 'img',
-    },
-    containerImgID: {
-        type: 'number',
-    },
-    containerImgAlt: {
-        type: 'string',
-        source: 'attribute',
-        attribute: 'alt',
-        selector: 'img',
-    },
-    containerDimRatio: {
-        type: 'number',
-        default: 50,
-    },
+	containerPaddingTop: {
+		type: 'number',
+		default: 0,
+	},
+	containerPaddingRight: {
+		type: 'number',
+		default: 0,
+	},
+	containerPaddingBottom: {
+		type: 'number',
+		default: 0,
+	},
+	containerPaddingLeft: {
+		type: 'number',
+		default: 0,
+	},
+	containerMarginTop: {
+		type: 'number',
+		default: 0,
+	},
+	containerMarginBottom: {
+		type: 'number',
+		default: 0,
+	},
+	containerWidth: {
+		type: 'string',
+		default: 'center',
+	},
+	containerMaxWidth: {
+		type: 'number',
+		default: 1170,
+	},
+	containerBackgroundColor: {
+		type: 'string',
+		default: '#fff',
+	},
+	containerImgURL: {
+		type: 'string',
+	},
+	containerImgID: {
+		type: 'number',
+	},
+	containerImgAlt: {
+		type: 'string',
+	},
+	containerImgType: {
+		type: 'string',
+	},
+	containerDimRatio: {
+		type: 'number',
+		default: 100,
+	},
 };
 
 class RodllerContainerBlock extends Component {
 
-    render() {
+	render() {
 
-        // Setup the attributes
-        const {
-            attributes: {
-                containerPaddingTop,
-                containerPaddingRight,
-                containerPaddingBottom,
-                containerPaddingLeft,
-                containerMarginTop,
-                containerMarginBottom,
-                containerWidth,
-                containerMaxWidth,
-                containerBackgroundColor,
-                containerImgURL,
-                containerImgID,
-                containerImgAlt,
-                containerDimRatio,
-            },
-            attributes,
-            isSelected,
-            editable,
-            className,
-            setAttributes
-        } = this.props;
+		// Setup the attributes
+		const {
+			attributes: {
+				containerPaddingTop,
+				containerPaddingRight,
+				containerPaddingBottom,
+				containerPaddingLeft,
+				containerMarginTop,
+				containerMarginBottom,
+				containerWidth,
+				containerMaxWidth,
+				containerBackgroundColor,
+				containerImgURL,
+				containerImgID,
+				containerImgAlt,
+				containerDimRatio,
+				containerImgType,
+			},
+			attributes,
+			isSelected,
+			editable,
+			className,
+			setAttributes
+		} = this.props;
 
-        const onSelectImage = img => {
-            setAttributes( {
-                containerImgID: img.id,
-                containerImgURL: img.url,
-                containerImgAlt: img.alt,
-            } );
-        };
+		return [
+			// Show the alignment toolbar on focus
+			<BlockControls>
+				<BlockAlignmentToolbar
+					value={ containerWidth }
+					onChange={ containerWidth => setAttributes( { containerWidth } ) }
+					controls={ [ 'center', 'full' ] }
+				/>
+			</BlockControls>,
+			// Show the block controls on focus
+			<Inspector
+				{ ...{ setAttributes, ...this.props } }
+			/>,
+			// Show the container markup in the editor
+			<Container { ...this.props }>
+				<div class="rodller-container-inside" >
+					{ containerImgURL && !! containerImgURL.length && (
+						<div class="rodller-container-image-wrap">
+							{containerImgType === 'image' && (
+								<img
+									className={ classnames(
+										'rodller-container-image'
+									) }
+									src={ containerImgURL }
+									alt={ containerImgAlt }
+									style={{
+										opacity: `${containerDimRatio / 100}`,
+									}}
+								/>
+							)}
+							{containerImgType === 'video' && (
+								<video playsInline={'playsInline'} autoPlay={'autoplay'} muted={'muted'} loop={'loop'}
+									className={ classnames(
+										'rodller-container-image'
+									) }
+									src={ containerImgURL }
+									alt={ containerImgAlt }
+									style={{
+										opacity: `${containerDimRatio / 100}`,
+									}}
+								/>
+							)}
+						</div>
+					) }
 
-        return [
-            // Show the alignment toolbar on focus
-            <BlockControls>
-                <BlockAlignmentToolbar
-                    value={ containerWidth }
-                    onChange={ containerWidth => setAttributes( { containerWidth } ) }
-                    controls={ [ 'center', 'full' ] }
-                />
-            </BlockControls>,
-            // Show the block controls on focus
-            <Inspector
-                { ...{ setAttributes, ...this.props } }
-            />,
-            // Show the container markup in the editor
-            <Container { ...this.props }>
-                <div class="rodller-container-inside">
-                    { containerImgURL && !! containerImgURL.length && (
-                        <div class="rodller-container-image-wrap">
-                            <img
-                                className={ classnames(
-                                    'rodller-container-image',
-                                    dimRatioToClass( containerDimRatio ),
-                                    {
-                                        'has-background-dim': containerDimRatio !== 0,
-                                    }
-                                ) }
-                                src={ containerImgURL }
-                                alt={ containerImgAlt }
-                            />
-                        </div>
-                    ) }
-
-                    <div
-                        class="rodller-container-content"
-                        style={ {
-                            maxWidth: `${containerMaxWidth}px`,
-                        } }
-                    >
-                        <InnerBlocks />
-                    </div>
-                </div>
-            </Container>
-        ];
-    }
+					<div
+						class="rodller-container-content"
+						style={ {
+							maxWidth: `${containerMaxWidth}px`,
+						} }
+					>
+						<InnerBlocks />
+					</div>
+				</div>
+			</Container>
+		];
+	}
 }
 
 // Register the block
 registerBlockType( 'rodller/rodller-container', {
-    title: __( 'Rodller Container', 'rodller-blocks' ),
-    description: __( 'Add a container block to wrap several blocks in a parent container.', 'rodller-blocks' ),
-    icon: 'editor-table',
-    category: 'widgets',
-    keywords: [
-        __( 'container', 'rodller-blocks' ),
-        __( 'section', 'rodller-blocks' ),
-        __( 'rodller', 'rodller-blocks' ),
-    ],
+	title: __( 'Rodller Container', 'rodller-blocks' ),
+	description: __( 'Add a container block to wrap several blocks in a parent container.', 'rodller-blocks' ),
+	icon: 'editor-table',
+	category: 'widgets',
+	keywords: [
+		__( 'container', 'rodller-blocks' ),
+		__( 'section', 'rodller-blocks' ),
+		__( 'rodller', 'rodller-blocks' ),
+	],
 
-    attributes: blockAttributes,
+	attributes: blockAttributes,
 
-    getEditWrapperProps( { containerWidth } ) {
-        if ( 'left' === containerWidth || 'right' === containerWidth || 'full' === containerWidth ) {
-            return { 'data-align': containerWidth };
-        }
-    },
+	getEditWrapperProps( { containerWidth } ) {
+		if ( 'left' === containerWidth || 'right' === containerWidth || 'full' === containerWidth ) {
+			return { 'data-align': containerWidth };
+		}
+	},
 
-    // Render the block components
-    edit: RodllerContainerBlock,
+	// Render the block components
+	edit: RodllerContainerBlock,
 
-    // Save the attributes and markup
-    save: function( props ) {
+	// Save the attributes and markup
+	save: function( props ) {
 
-        // Setup the attributes
-        const {
-            containerPaddingTop,
-            containerPaddingRight,
-            containerPaddingBottom,
-            containerPaddingLeft,
-            containerMarginTop,
-            containerMarginBottom,
-            containerWidth,
-            containerMaxWidth,
-            containerBackgroundColor,
-            containerImgURL,
-            containerImgID,
-            containerImgAlt,
-            containerDimRatio,
-        } = props.attributes;
+		// Setup the attributes
+		const {
+			containerPaddingTop,
+			containerPaddingRight,
+			containerPaddingBottom,
+			containerPaddingLeft,
+			containerMarginTop,
+			containerMarginBottom,
+			containerWidth,
+			containerMaxWidth,
+			containerBackgroundColor,
+			containerImgURL,
+			containerImgID,
+			containerImgAlt,
+			containerDimRatio,
+			containerImgType,
+		} = props.attributes;
 
-        // Save the block markup for the front end
-        return (
-            <Container { ...props }>
-                <div class="rodller-container-inside">
-                    { containerImgURL && !! containerImgURL.length && (
-                        <div class="rodller-container-image-wrap">
-                            <img
-                                className={ classnames(
-                                    'rodller-container-image',
-                                    dimRatioToClass( containerDimRatio ),
-                                    {
-                                        'has-background-dim': containerDimRatio !== 0,
-                                    }
-                                ) }
-                                src={ containerImgURL }
-                                alt={ containerImgAlt }
-                            />
-                        </div>
-                    ) }
+		// Save the block markup for the front end
+		return (
+			<Container { ...props }>
+				<div class="rodller-container-inside">
+					{ containerImgURL && !! containerImgURL.length && (
+						<div class="rodller-container-image-wrap">
+							{containerImgType === 'image' && (
+								<img
+									className={ classnames(
+										'rodller-container-image'
+									) }
+									src={ containerImgURL }
+									alt={ containerImgAlt }
+									style={{
+										opacity: `${containerDimRatio / 100}`,
+									}}
+								/>
+							)}
+							{containerImgType === 'video' && (
+								<video playsInline={'playsInline'} autoPlay={'autoplay'} muted={'muted'} loop={'loop'}
+ 									className={ classnames(
+										'rodller-container-image'
+									) }
+									src={ containerImgURL }
+									alt={ containerImgAlt }
+									style={{
+										opacity: `${containerDimRatio / 100}`,
+									}}
+								/>
+							)}
+						</div>
+					) }
 
-                    <div
-                        class="rodller-container-content"
-                        style={ {
-                            maxWidth: `${containerMaxWidth}px`,
-                        } }
-                    >
-                        <InnerBlocks.Content />
-                    </div>
-                </div>
-            </Container>
-        );
-    },
+					<div
+						class="rodller-container-content"
+						style={ {
+							maxWidth: `${containerMaxWidth}px`,
+						} }
+					>
+						<InnerBlocks.Content />
+					</div>
+				</div>
+			</Container>
+		);
+	},
 } );
-
-function dimRatioToClass( ratio ) {
-    return ( ratio === 0 || ratio === 50 ) ?
-        null :
-        'has-background-dim-' + ( 10 * Math.round( ratio / 10 ) );
-}
-
-function backgroundImageStyles( url ) {
-    return url ?
-        { backgroundImage: `url(${ url })` } :
-        undefined;
-}

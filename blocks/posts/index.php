@@ -90,7 +90,7 @@ endif;
  * Server rendering for /blocks/rodller-posts
  */
 if ( ! function_exists( 'rodller_posts_block_render' ) ):
-	function rodller_posts_block_render( $attributes, $page = 0, $options = ['before' => '<ul class="rodller-blocks-posts row">', 'after' => '</ul>', 'allow_load_more' => true] ) {
+	function rodller_posts_block_render( $attributes, $page = 0, $options = ['before' => '<div class="container"><ul class="rodller-blocks-posts row">', 'after' => '</ul></div>', 'allow_load_more' => true] ) {
 		
 		$args = [
 			'posts_per_page'       => intval( $attributes['postsToShow'] ),
@@ -129,16 +129,22 @@ if(!function_exists('rodller_blocks_posts_block_render_html')):
     function rodller_blocks_posts_block_render_html($attributes, $posts_query, $page, $options){
 	
 	    $markup = $options['before'];
-		   
+	    $js_options = rodller_blocks_get_editor_js_settings();
+	    $layout_options = $js_options['layouts'][$attributes['layout']];
+
 	    while ( $posts_query->have_posts() ) : $posts_query->the_post();
 	    
 	        $markup .= '
-			    <li id="post-' . get_the_ID() . '" class="rodller-blocks-posts layout-a col-12">
+			    <li id="post-' . get_the_ID() . '" class="rodller-blocks-post layout-' . esc_attr($attributes['layout']) . ' col-md-' . intval($layout_options['columns'][0]) . ' col-sm-12">
+			        
+				    <a href="' . esc_url( get_the_permalink() ) . '" class="rodller-posts-img">
+					    <img src="' . get_the_post_thumbnail_url(get_the_ID(), 'medium') . '" alt="' . esc_attr(get_the_title()) . '">
+				    </a>
 				    <a href="' . esc_url( get_the_permalink() ) . '" class="rodller-posts-title">
-					    <h2>' . esc_html( get_the_title() ) . '</h2>
+					    <h2 class="ellipsis">' . esc_html( get_the_title() ) . '</h2>
 				    </a>
 				    <div class="rodller-posts-expert">
-					    <p>' . get_the_excerpt() . '</p>
+					    <p class="ellipsis-p">' . get_the_excerpt() . '</p>
 				    </div>
 			    </li>';
 		

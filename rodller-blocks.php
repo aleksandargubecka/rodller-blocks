@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Rodller Blocks
  * Plugin URI: https://rodller.com
- * Description: Some Desc
+ * Description: Rodller Blocks is a plugin made for visual editing based on WordPress's Gutenberg esditor
  * Text Domain: rodller-blocks
  * Domain Path: /languages
  * Author: Rodller

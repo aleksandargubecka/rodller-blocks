@@ -53,6 +53,43 @@
                     });
                 });
             }
+        },
+
+
+        Counter: {
+            init: function() {
+
+                $( '.wp-block-rodller-rodller-counter' ).each( function() {
+                    var $this = $( this ),
+                        $strong = $this.find( 'strong' );
+
+                    if ( empty( $strong ) ) {
+                        return;
+                    }
+
+                    var countTo  = String($strong.data( 'count-to' ));
+
+                    var numbers = parseInt(countTo);
+                    var symbol = countTo.match(/[\W_]+/g);
+
+                    setTimeout( function() {
+
+                        $( { Counter: 0 } ).animate( { Counter: numbers }, {
+                            duration: 3000,
+                            easing: 'swing',
+                            step: function() {
+                                var text = Math.ceil( this.Counter );
+
+                                if(!empty(symbol)){
+                                    text = text + ' ' + symbol
+                                }
+
+                                $strong.text( text );
+                            }
+                        } );
+                    }, 1000 );
+                } );
+            }
         }
     };
 
@@ -61,5 +98,6 @@
     $(document).ready(function () {
         RodllerBlocks.LoadMore.init();
         RodllerBlocks.Sliders.init();
+        RodllerBlocks.Counter.init();
     });
 })(jQuery);

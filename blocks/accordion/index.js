@@ -3,8 +3,7 @@ import classnames from 'classnames';
 import Inspector from './inspector';
 
 // Import CSS
-// import './styles/style.scss';
-// import './styles/editor.scss';
+import './style.scss';
 
 // Components
 const { __ } = wp.i18n;

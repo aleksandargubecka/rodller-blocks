@@ -1,0 +1,22 @@
+.rodller-box{
+	padding: 30px 15px 25px;
+	border-top: 3px solid;
+	transition: all .4s ease-in-out;
+	&:hover{
+		box-shadow: 0 0 15px rgba(0, 0, 0, 0.07);
+	}
+	.wp-block-image{
+		img{
+			max-height: 70px;
+			width: auto;
+		}
+	}
+	h2{
+		min-height: 56px;
+		font-size: 22px;
+		margin: 0 !important;
+	}
+	p{
+		font-size: 14px;
+	}
+}

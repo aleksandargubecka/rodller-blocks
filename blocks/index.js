@@ -13,3 +13,4 @@ import './accordion/';
 import './team-member/';
 import './notice/';
 import './container/';
+import './box/';

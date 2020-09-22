@@ -2,7 +2,7 @@
  * Container wrapper
  */
 
-// Setup the block
+    // Setup the block
 const { Component } = wp.element;
 
 // Import block dependencies and components
@@ -36,7 +36,6 @@ export default class Container extends Component {
                 className={ classnames(
                     this.props.className,
                     `align${containerWidth}`,
-                    'ab-block-container',
                 ) }
             >{ this.props.children }</div>
         );

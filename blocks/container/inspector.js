@@ -2,7 +2,7 @@
  * Inspector Controls
  */
 
-// Setup the block
+    // Setup the block
 const { __ } = wp.i18n;
 const { Component } = wp.element;
 
@@ -40,7 +40,7 @@ export default class Inspector extends Component {
     render() {
 
         // Setup the attributes
-        const { containerPaddingTop, containerPaddingRight, containerPaddingBottom, containerPaddingLeft, containerMarginTop, containerMarginBottom, containerMaxWidth, containerBackgroundColor, containerDimRatio, containerImgURL, containerImgID, containerImgAlt } = this.props.attributes;
+        const { containerPaddingTop, containerPaddingRight, containerPaddingBottom, containerPaddingLeft, containerMarginTop, containerMarginBottom, containerMaxWidth, containerBackgroundColor, containerDimRatio, containerImgURL, containerImgID, containerImgAlt, containerImgType } = this.props.attributes;
         const { setAttributes } = this.props;
 
         const onSelectImage = img => {
@@ -48,6 +48,7 @@ export default class Inspector extends Component {
                 containerImgID: img.id,
                 containerImgURL: img.url,
                 containerImgAlt: img.alt,
+                containerImgType: img.type,
             } );
         };
 
@@ -56,6 +57,7 @@ export default class Inspector extends Component {
                 containerImgID: null,
                 containerImgURL: null,
                 containerImgAlt: null,
+                containerImgType: null,
             });
         };
 
@@ -137,6 +139,15 @@ export default class Inspector extends Component {
                         value={ containerImgID }
                         render={ ( { open } ) => (
                             <div>
+
+                                {containerImgURL && !! containerImgURL.length && (
+                                    <div>
+                                        <img
+                                            src={ containerImgURL }
+                                        />
+                                    </div>
+                                ) }
+
                                 <IconButton
                                     className="ab-container-inspector-media"
                                     label={ __( 'Edit image' ) }
